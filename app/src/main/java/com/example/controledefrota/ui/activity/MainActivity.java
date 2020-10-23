@@ -2,17 +2,13 @@ package com.example.controledefrota.ui.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.controls.actions.FloatAction;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.controledefrota.R;
 import com.example.controledefrota.model.Carro;
@@ -31,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     static List<Carro> carros;
     //
     private CarroAdapter adapter;
+
+    private int posicaoItemClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == Constantes.SOLICITA_EDICAO_CARRO && data.hasExtra(Constantes.CHAVE_EDICAO_CARRO)){
             if (resultCode == Activity.RESULT_OK){
-                Carro carro = (Carro) data.getSerializableExtra(Constantes.CHAVE_EDICAO_CARRO);
-
                 //Aqui precisamos do objeto carro e também da posição da lista
+                Carro carro = (Carro) data.getSerializableExtra(Constantes.CHAVE_EDICAO_CARRO);
+                carros.set(posicaoItemClick,carro);
+                adapter.notifyItemChanged(posicaoItemClick);
+
             }
         }
     }
@@ -99,8 +99,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewCarros.setAdapter(adapter);
         adapter.setOnItemClickListener(new CarroItemClickListener() {
             @Override
-            public void itemClick() {
-                Log.i("teste","teste");
+            public void itemClick(Carro carro, int posicao) {
+                //Criar intent e mandar o objeto pra outra tela
+                posicaoItemClick = posicao;
+                Intent intent = new Intent(MainActivity.this,
+                        FormNovoActivity.class);
+                intent.putExtra(Constantes.CHAVE_EDICAO_CARRO,carro);
+                startActivityForResult(intent, Constantes.SOLICITA_EDICAO_CARRO);
             }
         });
 

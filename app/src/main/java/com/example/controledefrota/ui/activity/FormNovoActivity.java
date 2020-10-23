@@ -50,7 +50,7 @@ public class FormNovoActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(FormNovoActivity.this,MainActivity.class);
                     intent.putExtra(Constantes.CHAVE_EDICAO_CARRO, carro);
-                    setResult(Activity.RESULT_OK);
+                    setResult(Activity.RESULT_OK,intent);
                     finish();
                 }else{
                     carro = pegaCarroDoFormulario();
