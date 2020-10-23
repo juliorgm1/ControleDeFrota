@@ -10,10 +10,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.service.controls.actions.FloatAction;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.controledefrota.R;
 import com.example.controledefrota.model.Carro;
+import com.example.controledefrota.ui.recyclerview.adapter.CarroAdapter;
+import com.example.controledefrota.ui.recyclerview.adapter.listener.CarroItemClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -25,18 +29,20 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabNovoCarro;
     //Declarando atributo estático, Essa lista por enquanto armazena os dados que seriam do banco de dados
     static List<Carro> carros;
+    //
+    private CarroAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Esse metodo carrega a lista, é apenas uma simulação para fazermos testes no recyclerview
+        geraListaCarros();
         //Nesse metodo vamos realiza a manipulação do recyclerview
         configuraRecyclerView();
         //Nesse metodo vamos manipular o botão
         cliqueBotao();
-        //Esse metodo carrega a lista, é apenas uma simulação para fazermos testes no recyclerview
-        geraListaCarros();
     }
 
     private void cliqueBotao() {
@@ -87,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewCarros = findViewById(R.id.recyclerViewCarros);
         //Aqui estamos configurando o LayoutManager, além no linearlayot temos outras como GridLayoutManager (depois dá uma pesquisada)
         recyclerViewCarros.setLayoutManager(new LinearLayoutManager(this));
+
+        //Juntar os dados da lista com os itens das Views do recyclerView
+        adapter = new CarroAdapter(carros);
+        recyclerViewCarros.setAdapter(adapter);
+        adapter.setOnItemClickListener(new CarroItemClickListener() {
+            @Override
+            public void itemClick() {
+                Log.i("teste","teste");
+            }
+        });
 
     }
 
