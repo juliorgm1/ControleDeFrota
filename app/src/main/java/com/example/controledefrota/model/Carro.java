@@ -1,6 +1,8 @@
 package com.example.controledefrota.model;
 
-public class Carro {
+import java.io.Serializable;
+
+public class Carro implements Serializable {
     private String id;
     private String placa;
     private String modelo;
@@ -16,5 +18,13 @@ public class Carro {
 
     public String getModelo() {
         return modelo;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 }

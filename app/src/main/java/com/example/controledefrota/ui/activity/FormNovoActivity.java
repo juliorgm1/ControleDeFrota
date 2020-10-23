@@ -2,6 +2,8 @@ package com.example.controledefrota.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +16,8 @@ public class FormNovoActivity extends AppCompatActivity {
     private EditText editModelo;
     private EditText editPlaca;
     private Button btnSalvar;
+    private boolean eFormularioEdicao;
+    private Carro carro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +26,18 @@ public class FormNovoActivity extends AppCompatActivity {
 
         carregaViews();
         cliqueBotao();
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constantes.CHAVE_EDICAO_CARRO)){
+            eFormularioEdicao = true;
+            carro = (Carro) intent.getSerializableExtra(Constantes.CHAVE_EDICAO_CARRO);
+            carregaDadosFormulario();
+        }
+    }
+
+    private void carregaDadosFormulario() {
+        editModelo.setText(carro.getModelo());
+        editPlaca.setText(carro.getPlaca());
     }
 
     private void cliqueBotao() {
@@ -29,10 +45,31 @@ public class FormNovoActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Carro carro = pegaCarroDoFormulario();
+                if (eFormularioEdicao){
+                    atualizaCarro();
 
+                    Intent intent = new Intent(FormNovoActivity.this,MainActivity.class);
+                    intent.putExtra(Constantes.CHAVE_EDICAO_CARRO, carro);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }else{
+                    carro = pegaCarroDoFormulario();
+
+                    Intent intent = new Intent(FormNovoActivity.this,MainActivity.class);
+                    intent.putExtra(Constantes.CHAVE_NOVO_CARRO, carro);
+                    setResult(Activity.RESULT_OK,intent);
+                    finish();
+                }
             }
         });
+    }
+
+    private void atualizaCarro() {
+        String modelo = editModelo.getText().toString();
+        String placa = editPlaca.getText().toString();
+
+        carro.setPlaca(placa);
+        carro.setModelo(modelo);
     }
 
     private Carro pegaCarroDoFormulario() {
