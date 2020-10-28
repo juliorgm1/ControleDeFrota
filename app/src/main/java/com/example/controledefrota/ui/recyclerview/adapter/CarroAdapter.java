@@ -1,5 +1,6 @@
 package com.example.controledefrota.ui.recyclerview.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.controledefrota.R;
+import com.example.controledefrota.database.AppDatabase;
 import com.example.controledefrota.model.Carro;
 import com.example.controledefrota.ui.recyclerview.adapter.listener.CarroItemClickListener;
 
@@ -17,11 +19,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.ViewHolder> {
-
+    private Context context;
     private List<Carro> carros;
     private CarroItemClickListener onItemClickListener;
 
-    public CarroAdapter(List<Carro> carros) {
+    public CarroAdapter(Context context,List<Carro> carros) {
+        this.context = context;
         this.carros = carros;
     }
 
@@ -55,6 +58,9 @@ public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.ViewHolder> 
     }
 
     public void removeItemCarro(int adapterPosition) {
+        AppDatabase.getInstance(context)
+                .carroDao()
+                .delete(carros.get(adapterPosition));
         carros.remove(adapterPosition);
         notifyItemRemoved(adapterPosition);
     }

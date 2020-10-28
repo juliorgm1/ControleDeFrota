@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.controledefrota.R;
+import com.example.controledefrota.database.AppDatabase;
 import com.example.controledefrota.model.Carro;
 import com.example.controledefrota.ui.recyclerview.adapter.CarroAdapter;
 import com.example.controledefrota.ui.recyclerview.adapter.listener.CarroItemClickListener;
@@ -73,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK){
                 //recuperando os dados(Objeto Carro) vindos da FormCarroActivity
                 Carro carro = (Carro) data.getSerializableExtra(Constantes.CHAVE_NOVO_CARRO);
+
+                //Adicionar objeto no banco
+                AppDatabase
+                        .getInstance(getApplicationContext())
+                        .carroDao()
+                        .insert(carro);
                 //Adicionando o objeto(Carro) naa lista
                 carros.add(carro);
 
@@ -84,9 +92,12 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK){
                 //Aqui precisamos do objeto carro e também da posição da lista
                 Carro carro = (Carro) data.getSerializableExtra(Constantes.CHAVE_EDICAO_CARRO);
+                AppDatabase
+                        .getInstance(getApplicationContext())
+                        .carroDao().update(carro);
+
                 carros.set(posicaoItemClick,carro);
                 adapter.notifyItemChanged(posicaoItemClick);
-
             }
         }
     }
@@ -97,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewCarros.setLayoutManager(new LinearLayoutManager(this));
 
         //Juntar os dados da lista com os itens das Views do recyclerView
-        adapter = new CarroAdapter(carros);
+        adapter = new CarroAdapter(getApplicationContext(),carros);
         recyclerViewCarros.setAdapter(adapter);
         adapter.setOnItemClickListener(new CarroItemClickListener() {
             @Override
@@ -115,13 +126,10 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerViewCarros);
     }
 
-    static void geraListaCarros(){
-        carros = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            if (i % 2 == 0)
-//                carros.add(new Carro("ABC-123"+i,"Corsa 201"+i));
-//            else
-//                carros.add(new Carro("ZYW-321"+i,"Palio 201"+i));
-//        }
+    void geraListaCarros(){
+        carros = AppDatabase.
+                getInstance(getApplicationContext())
+                .carroDao().getAll();
+
     }
 }
