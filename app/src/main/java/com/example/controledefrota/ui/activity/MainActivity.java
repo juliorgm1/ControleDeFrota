@@ -2,6 +2,7 @@ package com.example.controledefrota.ui.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import com.example.controledefrota.R;
 import com.example.controledefrota.model.Carro;
 import com.example.controledefrota.ui.recyclerview.adapter.CarroAdapter;
 import com.example.controledefrota.ui.recyclerview.adapter.listener.CarroItemClickListener;
+import com.example.controledefrota.ui.recyclerview.helper.CarroItemTouchHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -109,15 +111,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new CarroItemTouchHelper(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerViewCarros);
     }
 
     static void geraListaCarros(){
         carros = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            if (i % 2 == 0)
-                carros.add(new Carro("ABC-123"+i,"Corsa 201"+i));
-            else
-                carros.add(new Carro("ZYW-321"+i,"Palio 201"+i));
-        }
+//        for (int i = 0; i < 10; i++) {
+//            if (i % 2 == 0)
+//                carros.add(new Carro("ABC-123"+i,"Corsa 201"+i));
+//            else
+//                carros.add(new Carro("ZYW-321"+i,"Palio 201"+i));
+//        }
     }
 }

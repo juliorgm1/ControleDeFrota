@@ -13,6 +13,7 @@ import com.example.controledefrota.R;
 import com.example.controledefrota.model.Carro;
 import com.example.controledefrota.ui.recyclerview.adapter.listener.CarroItemClickListener;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.ViewHolder> {
@@ -51,6 +52,16 @@ public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.ViewHolder> 
     public int getItemCount() {
         //Retornar o tamanho total da lista
         return carros.size();
+    }
+
+    public void removeItemCarro(int adapterPosition) {
+        carros.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+    }
+
+    public void alteraPosicao(int posicaoInicial, int posicaoFinal) {
+        Collections.swap(carros,posicaoInicial,posicaoFinal);
+        notifyItemMoved(posicaoInicial,posicaoFinal);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
